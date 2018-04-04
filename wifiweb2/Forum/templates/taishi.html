@@ -1,0 +1,341 @@
+{% extends "base.html" %}{% load staticfiles %}
+
+{% block head %}
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+    <script type="text/javascript" src="{% static 'lib/echarts/shine.js' %}"></script>
+{% endblock %}
+
+{% block ms-navigation-system %}{% endblock %}
+
+{% block ul-system %}block{% endblock %}
+
+{% block navigation_checkpoint %}active md-accent-bg{% endblock %}
+
+{% block content %}
+    <div id="widgets" style="height:100%">
+        <div class="widget-group layout-wrap layout-row flex-100">
+            <ms-widget class="ms-widget ng-isolate-scope layout-column flex-gt-xs-50 flex-gt-md-25 flex-100" flippable="true" layout="column" flex="100" flex-gt-xs="50" flex-gt-md="25">
+                <ms-widget-front class="p-16 pink-400-bg white-fg ms-widget-front ng-scope">
+                    <div class="pb-24 ng-scope layout-align-space-between-center layout-row" layout="row" layout-align="space-between center">
+                        <div class="layout-align-start-center layout-row" layout="row" layout-align="start center">
+                            <md-icon aria-hidden="true" class="m-0 mr-8 md-font icon-harddisk material-icons md-default-theme" md-font-icon="icon-harddisk"></md-icon>
+                            <div class="h3 ng-binding">当前累计收集热点</div>
+                        </div>
+                    </div>
+                    <div class="text-align:center" layout="row" layout-align="start center" align="center">
+                        <div id="ap_count" style="font-size: 40px; font-family: Hiragino Sans GB;" class="">0</div>
+                    </div>
+                    <div class="pb-8 layout-align-space-between-start layout-row" layout="row" style="font-size: 12px">
+                        <span class="ng-binding">已获密码</span>
+                        <span id='ap_password_count' class="secondary-text font-weight-500 ng-binding">0(0%)</span>
+                    </div>
+                    <md-progress-linear class="ng-scope md-default-theme">
+                        <div class="md-container md-mode-determinate">
+                            <div class="md-dashed"></div>
+                            <div class="md-bar md-bar1"></div>
+                            <div class="md-bar md-bar2"></div>
+                        </div>
+                    </md-progress-linear>
+                </ms-widget-front>
+                <ms-widget-back class="p-16 pr-32 pink-400-bg white-fg ms-widget-back ng-scope">
+                    <div class="flip-to-front ng-scope">
+                        <button ng-click="flipWidget()" aria-label="Flip widget" class="md-icon-button md-button md-ink-ripple md-default-theme" type="button" ng-transclude="">
+                            <md-icon aria-hidden="true" md-font-icon="icon-close" class="s16 ng-scope md-font icon-close material-icons md-default-theme"></md-icon>
+                        </button>
+                    </div>
+                    <div class="ng-binding ng-scope">This is the back side. You can show detailed information here.</div>
+                </ms-widget-back>
+            </ms-widget>
+            <ms-widget class="ms-widget ng-isolate-scope layout-column flex-gt-xs-50 flex-gt-md-25 flex-100" flippable="true" layout="column" flex="100" flex-gt-xs="50" flex-gt-md="25">
+                <ms-widget-front class="p-16 blue-bg white-fg ms-widget-front ng-scope">
+                    <div class="pb-24 ng-scope layout-align-space-between-center layout-row" layout="row" layout-align="space-between center">
+                        <div class="layout-align-start-center layout-row" layout="row" layout-align="start center">
+                            <md-icon aria-hidden="true" class="m-0 mr-8 md-font icon-harddisk material-icons md-default-theme" md-font-icon="icon-harddisk"></md-icon>
+                            
+                            <div class="h3 ng-binding">今日累计收集热点</div>
+                        </div>
+                    </div>
+                    <div class="text-align:center" layout="row" layout-align="start center" align="center">
+                        <div id="day_count" style="font-size: 40px; font-family: Hiragino Sans GB;" class="">
+                            <md-icon aria-hidden="true" md-font-icon="icon-trending-down" style="margin-left:-24px;" class="ml-16 md-font icon-trending-down material-icons md-default-theme"></md-icon>
+                            0</div>
+                    </div>
+                </ms-widget-front>
+            </ms-widget>
+            <ms-widget class="ms-widget ng-isolate-scope layout-column flex-gt-xs-50 flex-gt-md-25 flex-100" flippable="true" layout="column" flex="100" flex-gt-xs="50" flex-gt-md="25">
+                <ms-widget-front class="p-16 teal-400-bg white-fg ms-widget-front ng-scope">
+                    <div class="pb-24 ng-scope layout-align-space-between-center layout-row" layout="row" layout-align="space-between center">
+                        <div class="layout-align-start-center layout-row" layout="row" layout-align="start center">
+                            <md-icon aria-hidden="true" class="m-0 mr-8 md-font icon-scale material-icons md-default-theme" md-font-icon="icon-scale"></md-icon>
+                            <div class="h3 ng-binding">当前监控点</div>
+                        </div>
+                    </div>
+                    <div class="text-align:center" layout="row" layout-align="start center" align="center">
+                        <div id="cp_count" style="font-size: 40px; font-family: Hiragino Sans GB;" class="">0</div>
+                    </div>
+                </ms-widget-front>
+            </ms-widget>
+            <ms-widget class="ms-widget ng-isolate-scope layout-column flex-gt-xs-50 flex-gt-md-25 flex-100" flippable="true" layout="column" flex="100" flex-gt-xs="50" flex-gt-md="25">
+                <ms-widget-front class="p-16 indigo-400-bg white-fg ms-widget-front ng-scope">
+                    <div class="pb-24 ng-scope layout-align-space-between-center layout-row" layout="row" layout-align="space-between center">
+                        <div class="layout-align-start-center layout-row" layout="row" layout-align="start center">
+                            <md-icon aria-hidden="true" class="m-0 mr-8 md-font icon-brightness-5 material-icons md-default-theme" md-font-icon="icon-scale"></md-icon>
+                            <div class="h3 ng-binding">今日之星</div>
+                        </div>
+                    </div>
+                    <div class="text-align:center" layout="row" layout-align="start center" align="center">
+                        <div id="star" style="font-size: 40px; font-family: Hiragino Sans GB;" class=""></div>
+                    </div>
+                </ms-widget-front>
+            </ms-widget>
+        </div>
+        
+        <div class="widget-group layout-wrap layout-row flex-100">
+            <ms-widge class="ms-widget ng-isolate-scope layout-row flex-gt-md-50 flex-100">
+                <ms-widget-front class="white-bg ms-widget-front ng-scope" style="height:447px">
+                    <div id="line-select" class="ph-16 border-bottom ng-scope layout-align-space-between-center layout-row" layout="row" layout-align="space-between center">
+                        <div class="h3 ng-binding">热点每日搜集数统计</div>
+                        <div class="pv-16">
+                            <md-select class="md-default-theme simplified" style="position: relative">
+                                <md-select-value class="_md-select-value" value="weak">
+                                    <span>
+                                        <div class="_md-text ng-binding">一周内</div>
+                                    </span>
+                                    <span class="_md-select-icon" aria-hidden="true"></span>
+                                </md-select-value>
+                                <div class="_md-select-menu-container md-default-theme _md-leave _md-clickable">
+                                    <md-select-menu class="_md md-default-theme _md-overflow">
+                                        <md-content class="_md md-default-theme">
+                                            <md-option value="weak" class="ng-scope md-ink-ripple">
+                                                <div class="_md-text ng-binding">一周内</div>
+                                                <div class="md-ripple-container"></div>
+                                            </md-option>
+                                            <md-option value="month" class="ng-scope md-ink-ripple">
+                                                <div class="_md-text ng-binding">一个月</div>
+                                                <div class="md-ripple-container"></div>
+                                            </md-option>
+                                            <md-option value="year" class="ng-scope md-ink-ripple">
+                                                <div class="_md-text ng-binding">一年内</div>
+                                                <div class="md-ripple-container"></div>
+                                            </md-option>
+                                            <md-option value="all" class="ng-scope md-ink-ripple">
+                                                <div class="_md-text ng-binding">所有</div>
+                                                <div class="md-ripple-container"></div>
+                                            </md-option>
+                                        </md-content> 
+                                    </md-select-menu>
+                                </div>
+                            </md-select>
+                        </div>
+                    </div>
+                    <div id="line" style="height:400px;">
+                    </div>
+                    
+                </ms-widget-front>
+            </ms-widge>
+            <ms-widge class="ms-widget ng-isolate-scope layout-row flex-gt-md-50 flex-100" >
+                <ms-widget-front class="white-bg ms-widget-front ng-scope" style="height:447px">
+                    <div id="bar-select" class="ph-16 border-bottom ng-scope layout-align-space-between-center layout-row" layout="row" layout-align="space-between center">
+                        <div class="h3 ng-binding">监控点累计搜集热点排行</div>
+                        <div class="pv-16">
+                            <md-select class="md-default-theme simplified" style="position: relative">
+                                <md-select-value class="_md-select-value" value="today">
+                                    <span>
+                                        <div class="_md-text ng-binding">今日</div>
+                                    </span>
+                                    <span class="_md-select-icon" aria-hidden="true"></span>
+                                </md-select-value>
+                                <div class="_md-select-menu-container md-default-theme _md-leave _md-clickable">
+                                    <md-select-menu class="_md md-default-theme _md-overflow">
+                                        <md-content class="_md md-default-theme">
+                                            <md-option value="today" class="ng-scope md-ink-ripple">
+                                                <div class="_md-text ng-binding">今日</div>
+                                                <div class="md-ripple-container"></div>
+                                            </md-option>
+                                            <md-option value="weak" class="ng-scope md-ink-ripple">
+                                                <div class="_md-text ng-binding">一周内</div>
+                                                <div class="md-ripple-container"></div>
+                                            </md-option>
+                                            <md-option value="month" class="ng-scope md-ink-ripple">
+                                                <div class="_md-text ng-binding">一个月</div>
+                                                <div class="md-ripple-container"></div>
+                                            </md-option>
+                                            <md-option value="year" class="ng-scope md-ink-ripple">
+                                                <div class="_md-text ng-binding">一年内</div>
+                                                <div class="md-ripple-container"></div>
+                                            </md-option>
+                                            <md-option value="all" class="ng-scope md-ink-ripple">
+                                                <div class="_md-text ng-binding">所有</div>
+                                                <div class="md-ripple-container"></div>
+                                            </md-option>
+                                        </md-content> 
+                                    </md-select-menu>
+                                </div>
+                            </md-select>
+                        </div>
+                    </div>
+                    <div id="bar" style="height:400px;">
+                    </div>
+                </ms-widget-front>
+            </ms-widge>
+        </div>
+        <script>
+            $('#widgets').perfectScrollbar();
+            $("ms-widge").initControl();
+            
+            __ajax__('/hotspot/count',{},function (data, textStatus) {
+                if (data==undefined || data==null) {
+                    return
+                }
+                if (data.cp_count!=undefined && data.cp_count!='') {
+                    $("#cp_count").text(parseFloat(data.cp_count).toLocaleString())
+                }
+                
+                if (data.ap_count!=undefined && data.ap_count!='' && data.ap_password_count!=undefined && data.ap_password_count!='') {
+                    $("#ap_count").text(parseFloat(data.ap_count).toLocaleString())
+                    $("#ap_password_count").text(parseFloat(data.ap_password_count)+"("+Math.round(data.ap_password_count*100/data.ap_count)+"%)")
+                    
+                    $("#ap_password_count").parent().next().find(".md-bar2").css({
+                        "transform":"translateX(-"+((0.5-(data.ap_password_count/data.ap_count)/2)*100)+"%) scale("+(data.ap_password_count/data.ap_count)+", 1)"
+                    });
+                
+                }
+                
+                if (data.day_count!=undefined && data.day_count!='') {
+                    $("#day_count").empty();
+                    $("#day_count").append("<md-icon aria-hidden=\"true\" md-font-icon=\"icon-trending-down\" style=\"margin-left:-24px;\" class=\"ml-16 md-font icon-trending-down material-icons md-default-theme\"></md-icon>");
+                    $("#day_count").append(parseFloat(data.day_count).toLocaleString())
+                }
+                
+                if (data.star!=undefined && data.star!='') {
+                    $("#star").text(data.star)
+                }
+            },function (XMLHttpRequest, textStatus, errorThrown){
+                alert('error');
+            });
+            
+            var line = echarts.init(document.getElementById('line'), 'shine');
+            var bar = echarts.init(document.getElementById('bar'), 'shine');
+            
+            line.setOption({
+                title:{
+                    show:false
+                },
+                tooltip : {
+                    trigger: 'axis',
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    data: []
+                },
+                yAxis: {},
+                series: [{
+                    name: '累计搜集',
+                    areaStyle: {
+                        normal: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                offset: 0,
+                                color: 'rgb(255, 158, 68)'
+                            }, {
+                                offset: 1,
+                                color: 'rgb(255, 70, 131)'
+                            }])
+                        }
+                    },
+                    type: 'line',
+                    data: []
+                }]
+            });
+            
+            
+            function countbyday(t){
+                $.get('/hotspot/countbyday?t='+t,function (data) {
+                    data=data.ToJson();
+                    
+                    x=data.map(function (item) {
+                        return item[0];
+                    })
+                    
+                    var y=data.map(function (item) {
+                        return item[1];
+                    });
+                    
+                    line.setOption({
+                        xAxis: {
+                            type : 'category',
+                            boundaryGap : false,
+                            data: x
+                        },
+                        yAxis: {
+                            splitLine: {
+                                show: false
+                            }
+                        },
+                        series: {
+                            name: 'Beijing AQI',
+                            type: 'line',
+                            data: y
+                        }
+                    });
+                });
+            }
+
+            function countbycp(t){
+                $.get('/checkpoint/countbycp?t='+t,function (data) {
+                    data=data.ToJson();
+                    var option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'shadow'
+                            }
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'value',
+                            boundaryGap: [0, 0.01]
+                        },
+                        yAxis: {
+                            type: 'category',
+                            nameRotate:120,
+                            data: data.name
+                        },
+                        series: [
+                            {
+                                name: '累计搜集',
+                                type: 'bar',
+                                data: data.value
+                            },
+                        ]
+                    };
+                    bar.setOption(option);
+                });
+            }
+            
+            countbyday("weak");
+            countbycp("today");
+            
+            $("#line-select md-option").click(function(){
+                 var val=$(this).attr("value");
+                 countbyday(val);
+            });
+            
+            $("#bar-select md-option").click(function(){
+                 var val=$(this).attr("value");
+                 countbycp(val);
+            });
+        </script>
+    </div>
+    
+{% endblock %}
+

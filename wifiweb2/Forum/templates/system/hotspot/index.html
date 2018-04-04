@@ -1,0 +1,117 @@
+{% extends "base.html" %}{% load staticfiles %}
+
+{% block head %}
+    <script type="text/javascript" src="{% static "lib/DataTable/media/js/jquery.dataTables.min.js" %}"></script>
+
+{% endblock %}
+
+{% block ms-navigation-system %}{% endblock %}
+
+{% block ul-system %}block{% endblock %}
+
+{% block navigation_user %}active md-accent-bg{% endblock %}
+
+{% block content %}
+                    <div id="hotspotmng" class="page-layout carded fullwidth ng-scope layout-row" style="height: 100%;">
+                        <div class="top-bg md-accent-bg"></div>
+                        <div class="center layout-column flex">
+                            
+                            <div class="header layout-align-space-between-center layout-row">
+                                <div class="white-fg layout-align-start-start layout-column">
+                                    <div class="h1 layout-align-start-center layout-row">
+                                        <md-icon class="md-font icon-cube-outline material-icons md-default-theme" md-font-icon="icon-cube-outline"></md-icon>
+                                        <span class="ng-scope">热点列表</span>
+                                    </div>
+                                    <div class="product-count secondary-text">
+                                        <span class="ng-scope">Total Products:</span> 
+                                        <span class="ng-binding">{{ total }}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="toolbar layout-align-space-between-center layout-row">
+                                        <div class="search layout-align-start-center layout-row flex">
+                                            <input id="hotspot-search" class="search-input ng-scope flex" name placeholder="请输入需要查询的热点" type="text"/>
+                                        </div>
+                                        <div class="layout-align-end-center layout-row">
+                                            <button id="btn-search" class="md-icon-button md-button ng-scope md-ink-ripple md-default-theme" type="button" data-toggle="tooltip" data-placement="bottom" title="查询">
+                                                <md-icon class="ng-scope md-font icon-magnify material-icons md-default-theme" md-font-icon=""></md-icon>
+                                            </button>
+                                            <button id="btn-refresh" class="md-icon-button md-button ng-scope md-ink-ripple md-default-theme" type="button" data-toggle="tooltip" data-placement="bottom" title="刷新">
+                                                <md-icon class="ng-scope md-font icon-reload material-icons md-default-theme" md-font-icon=""></md-icon>
+                                            </button>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="content-card layout-column flex">
+                                <div class="content fullpage-datatable layout-column flex" style="padding:0px; position: relative">
+                                    <table id="hotspot-table" class="dataTable row-border hover ng-isolate-scope no-footer dtr-inline"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    <script type="text/javascript">
+        var searchData={};
+        $('.content-card > .content').perfectScrollbar();
+        var dt=__ajax_grid("#hotspot-table", "/hotspot/List", [
+            {
+                "mData": "mac",
+                "sTitle": "热点MAC",
+                "sWidth":"120px",
+            },
+            {
+                "mData": "ssid",
+                "sTitle": "热点SSID",
+                "sWidth":"150px",
+            },
+	        {
+                "mData": "password",
+                "sTitle": "密码",
+                "sWidth":"100px"
+            },
+            {
+                "mData": "location",
+                "sWidth":"220px",
+                "sTitle": "坐标",
+                "mRender":function(data,type,row){
+                    if (data) {
+                        if (row.latitude!="" && row.longitude!="") {
+                            return "经度:"+row.longitude+",纬度:"+row.latitude;
+                        }
+                        return "--";
+                    }else{
+                        return $("<span/>").text(row.location).addClass("nohand").attr({"data-toggle":"tooltip","data-placement":"bottom","title":("经度:"+row.longitude+",纬度:"+row.latitude),"type":"button"})[0].outerHTML;
+                    }
+                }
+            },
+            {
+                "mData": "encrypt",
+                "sTitle": "加密方式",
+                "sWidth":"120px"
+            },
+            {
+                "mData": "time",
+                "sTitle": "最新时间"
+            }
+        ],{
+        "fnServerParams": function(aoData) {
+                $.each(searchData, function(k, v) {
+                    aoData.push({ "name": k, "value": v });
+                });
+            }
+        });
+
+        $("#hotspotmng #btn-refresh").click(function(){
+            dt.fnDraw();
+        });
+        
+        $("#hotspotmng #btn-search").click(function(){
+            searchData.search = $("#hotspotmng #hotspot-search").val();
+            dt.fnDraw();
+        });
+        
+        setInterval(function(){
+            dt.fnDraw(false);
+        },10000)
+    </script>
+{% endblock %}
+

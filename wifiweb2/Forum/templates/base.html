@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>{% load staticfiles %}
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>WIFI热点自动化搜集系统</title>
+        <!-- load bootstrap css-->
+        <link type="text/css" href="{% static 'lib/bootstrap/css/bootstrap.min.css' %}"  rel="stylesheet" media="screen"/>
+        
+        <!-- load common css -->
+        <!-- 使用指令加载静态资源，会导致url被编码，特别是有版本号的url，如?v=xxx，就会在客户端无法加载出来 -->
+        <link type="text/css" href="/static/css/animate.css" rel="stylesheet" media="screen"/>
+        <link type="text/css" href="/static/css/dist/app-inline.css?v=433d991db0"  rel="stylesheet" media="screen"/>
+        <link type="text/css" href="/static/css/dist/vendor-1140dab6ec.css?v=27ad59f11f'" rel="stylesheet" media="screen"/>
+        <link type="text/css" href="/static/css/dist/app-80c5b1e71e.css?v=0706342fd7" rel="stylesheet" media="screen"/>
+        <link type="text/css" href='/static/css/dist/common.css?v=ee6f953b16' rel="stylesheet" media="screen"/>
+        <!-- load font -->
+        <link href="/static/css/dist/font.css?v=03a58bf050" rel="stylesheet" type="text/css" />
+
+        <!-- load jquery -->
+        <script type="text/javascript" src="{% static 'lib/jQuery/jquery-1.11.2.js' %}"></script>
+    
+        <!-- load bootstrap js-->
+        <script type="text/javascript" src="{% static 'lib/bootstrap/js/bootstrap.js' %}"></script>
+        <!-- load bootstrap-notify.js -->
+        <script type="text/javascript" src="{% static 'lib/bootstrap-notify/bootstrap-notify.js' %}"></script>
+    
+        <!-- load perfect-scrollbar js-->
+        <script type="text/javascript" src="{% static 'lib/perfect-scrollbar/perfect-scrollbar.jquery.js' %}"></script>
+
+        <script type="text/javascript" src="{% static 'js/utils.js' %}"></script>
+        {% block head %}{% endblock %}
+    </head>
+    <body class="animate-slide-up ng-scope layout-column">
+        <div id="main" class="animate-slide-up ng-scope layout-column">
+            <div id="layout-vertical-navigation" class="template-layout ng-scope layout-row flex">
+                <div id="vertical-navigation" class="md-primary-bg _md-closed ms-scroll ng-scope ng-isolate-scope _md md-default-theme _md-locked-open ps-container ps-theme-default">
+                    <md-toolbar class="navigation-header md-whiteframe-1dp ng-scope _md layout-align-space-between-center layout-row md-default-theme">
+                        <div class="logo layout-align-start-center layout-row">
+                            <span class="logo-image">F</span> 
+                            <span class="logo-text">WIFI</span>
+                        </div>
+                        <md-icon class="fold-toggle s18 show-gt-sm md-font icon-backburger material-icons md-default-theme" md-font-icon="icon-backburger"></md-icon>
+                    </md-toolbar>
+                    <ms-navigation class="scrollable ng-scope ms-navigation ms-scroll ng-isolate-scope ps-container ps-theme-default ps-active-y">
+                        <ul>
+                            <li class="ms-navigation-node ng-scope">
+                                <div class="ms-navigation-item ng-scope layout-row">
+                                    <div class="ms-navigation-button ng-scope">
+                                        <i class="icon s16 icon-tile-four"></i>
+                                        <span href="/index/" class="title ng-scope ng-binding flex">首页</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="ms-navigation-node ng-scope">
+                                <div class="ms-navigation-item ng-scope layout-row">
+                                    <div class="ms-navigation-button ng-scope">
+                                        <i class="icon s16 icon-tile-four"></i>
+                                        <span href="/map/" class="title ng-scope ng-binding flex">热点分布</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="ms-navigation-node ng-scope">
+                                <div class="ms-navigation-item ng-scope layout-row">
+                                    <div class="ms-navigation-button ng-scope">
+                                        <i class="icon s16 icon-tile-four"></i>
+                                        <span href="/taishi/" class="title ng-scope ng-binding flex">系统态势</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="ms-navigation-node ng-scope">
+                                <div class="ms-navigation-item ng-scope layout-row">
+                                    <div class="ms-navigation-button ng-scope">
+                                        <i class="icon s16 icon-tile-four"></i>
+                                        <span href="/hotspot/" class="title ng-scope ng-binding flex">热点信息</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="ms-navigation-node ng-scope">
+                                <div class="ms-navigation-item ng-scope layout-row">
+                                    <div class="ms-navigation-button ng-scope">
+                                        <i class="icon s16 icon-tile-four"></i>
+                                        <span href="/checkpoint/" class="title ng-scope ng-binding flex">监控点</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </ms-navigation>
+                </div>
+                <div id="content-container" class="layout-column flex">
+                    <md-toolbar id="toolbar" class="md-menu-toolbar md-whiteframe-1dp ng-scope _md md-default-theme">
+                        <md-menu-bar id="user-menu" class="_md _md-keyboard-mode md-default-theme">
+                            <md-menu class="md-menu ng-scope _md" style="float:right">
+                                <button class="user-button md-button ng-scope md-ink-ripple md-default-theme" type="button">
+                                    <div class="ng-scope layout-align-space-between-center layout-row">
+                                        <div class="avatar-wrapper">
+                                            <img class="avatar" src="{% static 'images/profile.jpg' %}">
+                                            <md-icon md-font-icon class="icon status s16 material-icons icon-checkbox-marked-circle md-default-theme" style="color: rgb(76, 175, 80);"></md-icon>
+                                        </div>
+                                        <span class="username show-gt-sm">Administrator</span>
+                                        <md-icon md-font-icon class="icon s16 hide-xs md-font icon-chevron-down material-icons md-default-theme"></md-icon>
+                                    </div>
+                                </button>
+                            </md-menu>
+                        </md-menu-bar>
+                    </md-toolbar>
+                    <md-content id="content" class="animate-slide-up md-hue-2 ms-scroll ng-scope _md flex md-default-theme ps-container ps-theme-default ps-active-y">
+                        {% block content %}{% endblock %}
+                    </md-content>
+                </div>
+            </div>
+        </div>
+        <script>
+            //$('#vertical-navigation ms-navigation,md-content#content').perfectScrollbar();
+            $("#vertical-navigation ms-navigation ul li span").click(function () {
+                var url=$(this).attr("href");
+                window.location.href=url;
+                
+            });
+            $("[data-toggle='tooltip']").tooltip();
+        </script>
+    </body>
+</html>

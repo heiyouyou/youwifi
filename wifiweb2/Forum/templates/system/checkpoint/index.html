@@ -1,0 +1,279 @@
+{% extends "base.html" %}{% load staticfiles %}
+
+{% block head %}
+    <script type="text/javascript" src="{% static "lib/DataTable/media/js/jquery.dataTables.min.js" %}"></script>
+
+{% endblock %}
+
+{% block ms-navigation-system %}{% endblock %}
+
+{% block ul-system %}block{% endblock %}
+
+{% block navigation_checkpoint %}active md-accent-bg{% endblock %}
+
+{% block content %}
+                    <div id="checkpointmng" class="page-layout carded fullwidth ng-scope layout-row" style="height: 100%;">
+                        <div class="top-bg md-accent-bg"></div>
+                        <div class="md-tab-content center layout-column _md md-active">
+                            <div class="header layout-align-space-between-center layout-row">
+                                <div class="white-fg layout-align-start-start layout-column">
+                                    <div class="h1 layout-align-start-center layout-row">
+                                        <md-icon class="md-font icon-cube-outline material-icons md-default-theme" md-font-icon="icon-cube-outline"></md-icon>
+                                        <span class="ng-scope">监控点列表</span>
+                                    </div>
+                                    <div class="product-count secondary-text">
+                                        <span class="ng-scope">Total Products:</span> 
+                                        <span class="ng-binding">{{ total }}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="toolbar layout-align-space-between-center layout-row">
+                                        <div class="search layout-align-start-center layout-row flex">
+                                            <input id="checkpoint-search" class="search-input ng-scope flex" name placeholder="请输入需要查询的监控点" type="text"/>
+                                        </div>
+                                        <div class="layout-align-end-center layout-row">
+                                            <button id="btn-search" class="md-icon-button md-button ng-scope md-ink-ripple md-default-theme" type="button" data-toggle="tooltip" data-placement="bottom" title="查询">
+                                                <md-icon class="ng-scope md-font icon-magnify material-icons md-default-theme" md-font-icon=""></md-icon>
+                                            </button>
+                                            <button id="btn-refresh" class="md-icon-button md-button ng-scope md-ink-ripple md-default-theme" type="button" data-toggle="tooltip" data-placement="bottom" title="刷新">
+                                                <md-icon class="ng-scope md-font icon-reload material-icons md-default-theme" md-font-icon=""></md-icon>
+                                            </button>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="content-card layout-column flex">
+                                <div class="content fullpage-datatable layout-column flex" style="padding:0px; position: relative">
+                                    <table id="checkpoint-table" class="dataTable row-border hover ng-isolate-scope no-footer dtr-inline"></table>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="md-tab-content center layout-column _md md-right" style="position: absolute;">
+                            <div class="header layout-align-space-between-center layout-row">
+                                <div class="white-fg layout-align-start-start layout-column">
+                                    <div class="h1 layout-align-start-center layout-row">
+                                        <md-icon class="md-font icon-cube-outline material-icons md-default-theme" md-font-icon="icon-cube-outline"></md-icon>
+                                        <span class="ng-scope">热点搜集记录</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="toolbar layout-align-space-between-center layout-row">
+                                        <div class="search layout-align-start-center layout-row flex">
+                                            <input id="ap-search" class="search-input ng-scope flex" name placeholder="请输入需要查询的监控点" type="text"/>
+                                        </div>
+                                        <div class="layout-align-end-center layout-row">
+                                            <button id="btn-ap-search" class="md-icon-button md-button ng-scope md-ink-ripple md-default-theme" type="button" data-toggle="tooltip" data-placement="bottom" title="查询">
+                                                <md-icon class="ng-scope md-font icon-magnify material-icons md-default-theme" md-font-icon=""></md-icon>
+                                            </button>
+                                            <button id="btn-ap-refresh" class="md-icon-button md-button ng-scope md-ink-ripple md-default-theme" type="button" data-toggle="tooltip" data-placement="bottom" title="刷新">
+                                                <md-icon class="ng-scope md-font icon-reload material-icons md-default-theme" md-font-icon=""></md-icon>
+                                            </button>
+                                             <button id="btn-ap-export" class="md-icon-button md-button ng-scope md-ink-ripple md-default-theme" type="button" data-toggle="tooltip" data-placement="bottom" title="导出">
+                                                <md-icon class="ng-scope md-font icon-arrow-down-bold-circle-outline material-icons md-default-theme" md-font-icon=""></md-icon>
+                                            </button>
+                                            <button id="btn-ap-back" class="md-icon-button md-button ng-scope md-ink-ripple md-default-theme" type="button" data-toggle="tooltip" data-placement="bottom" title="返回">
+                                                <md-icon class="ng-scope md-font icon-arrow-left-bold material-icons md-default-theme" md-font-icon=""></md-icon>
+                                            </button>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="content-card layout-column flex">
+                                <div class="content fullpage-datatable layout-column flex" style="padding:0px; position: relative">
+                                    <table id="ap-table" class="dataTable row-border hover ng-isolate-scope no-footer dtr-inline"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    <script type="text/javascript">
+        var searchData={};
+        var ap_searchData={}
+        var autoRefresh=true;
+        
+        $('.content-card > .content').perfectScrollbar();
+        var dt=__ajax_grid("#checkpoint-table", "/checkpoint/List", [
+            {
+                "mData": "mac",
+                "sWidth":"120px",
+                "sTitle": "MAC地址"
+            },
+            {
+                "mData": "name",
+                "sWidth":"120px",
+                "sTitle": "名称"
+            },
+            {
+                "mData": "count",
+                "sTitle": "累计搜集",
+                "sWidth":"80px"
+            },{
+                "mData": "ver",
+                "sTitle": "版本号",
+                "sWidth":"70px"
+            },
+	    {
+                "mData": "ip",
+                "sTitle": "IP地址",
+                "sWidth":"120px"
+            },
+            {
+                "mData": "remark",
+                "sTitle": "备注",
+                "sWidth":"100px",
+                "mRender":function(data,type,row){
+                    if (data=="" || data==null) {
+                        return "<a href='#' class='remark_edit' no-data>点击编辑</a>";
+                    }
+                    else
+                        return "<a href='#' class='remark_edit'>"+data+"</a>";
+                }
+            },
+            {
+                "mData": "time",
+                "sTitle": "最新时间"
+            },
+            {
+                "mData": "id",
+                "sTitle": "操作",
+                "sWidth":"60px",
+                "bSortable": false,
+                "mRender":function(data,type,row){    
+                    return $("<button/>").addClass("btn-view md-icon-button md-button ng-scope md-ink-ripple md-default-theme")
+                                         .attr({"data-toggle":"tooltip","data-placement":"bottom","title":"查看详情","type":"button"})
+                                         .append($("<md-icon>").addClass("s16 ng-scope md-font icon-message-text-outline material-icons md-default-theme").attr("md-font-icon","icon-close"))[0].outerHTML;
+                }
+            }
+        ],{
+            "fnServerParams": function(aoData) {
+                $.each(searchData, function(k, v) {
+                    aoData.push({ "name": k, "value": v });
+                });
+            }
+        });
+        
+        var ap_dt=__ajax_grid("#ap-table",'/hotspot/ap',[
+            {
+                "mData": "mac",
+                "sTitle": "热点MAC",
+                "sWidth":"120px",
+            },
+            {
+                "mData": "ssid",
+                "sTitle": "热点SSID",
+                "sWidth":"150px",
+            },
+            {
+                "mData": "id",
+                "sWidth":"220px",
+                "sTitle": "坐标",
+                "mRender":function(data,type,row){
+                    if (row.location=='') {
+                        if (row.y!="" && row.x!="") {
+                            return "经度:"+row.x+",纬度:"+row.y;
+                        }
+                        return "--";
+                    }
+                    else
+                    {
+                        return $("<span/>").text(row.location).addClass("nohand").attr({"data-toggle":"tooltip","data-placement":"bottom","title":("经度:"+row.x+",纬度:"+row.y),"type":"button"})[0].outerHTML;
+                    }
+                }
+            },
+            {
+                "mData": "encrypt",
+                "sTitle": "加密方式",
+                "sWidth":"120px"
+            },
+            {
+                "mData": "time",
+                "sTitle": "最新时间"
+            },
+        ],{
+            "fnServerParams": function(aoData) {
+                $.each(ap_searchData, function(k, v) {
+                    aoData.push({ "name": k, "value": v });
+                });
+            }
+        });
+        
+        $("#checkpointmng #btn-refresh,#checkpointmng #btn-ap-refresh").click(function(){
+            if (this.id=='btn-refresh') {
+                dt.fnDraw();
+            }
+            else
+                ap_dt.fnDraw();
+            
+        });
+        
+        $("#checkpointmng #btn-search,#checkpointmng #btn-ap-search").click(function(){
+            if (this.id=='btn-search') {
+                searchData.name=$("#checkpointmng #checkpoint-search").val();
+                dt.fnDraw();
+            }
+            else
+            {
+                ap_searchData.name=$("#checkpointmng #ap-search").val();
+                ap_dt.fnDraw();
+            }
+        });
+        
+        $("#checkpointmng #btn-ap-export").click(function(){
+            window.open("/hotspot/export?pid="+ap_searchData.pid);
+        })
+        
+        $(document).on("click",".remark_edit",function(){
+            autoRefresh=false;
+            var has_data=$(this).attr("no-data");
+            $(this).hide();
+            
+            var text=$("<input/>",{
+                type:'text'
+            }).val(has_data!=undefined&&has_data!=null?"":$(this).text())
+            .css({"width":"80px","background-color":"#ddd"})
+            .addClass("remark-text");
+            
+            $(this).parent().append(text);
+        });
+        
+        $(document).on("keydown",".remark-text",function(event){
+            if(event.keyCode != "13")  
+                return;
+            autoRefresh=true;
+            var nTr = $(this).parents('tr')[0];
+            var d = dt.fnGetData(nTr);
+            
+            
+            __ajax__('/checkpoint/remark',{id:d.id,remark:$(this).val()},function (data, textStatus) {
+                if (!data.result) {
+                    alert(data.msg)
+                }
+                else{
+                    dt.fnDraw(false);
+                    callback();
+                }
+            },function (XMLHttpRequest, textStatus, errorThrown){
+                alert('error');
+            });
+        })
+        
+        setInterval(function(){
+            if (autoRefresh) {
+                dt.fnDraw(false);
+            }
+        },10000);
+        
+        $("#checkpointmng button#btn-ap-back").click(function(){
+            $(this).parents(".md-tab-content").removeClass("md-active").addClass("md-right").prev().removeClass("md-left").addClass("md-active");
+        })
+        
+        $(document).on("click","#checkpointmng .btn-view",function(){
+            var nTr = $(this).parents('tr')[0];
+            var data = dt.fnGetData(nTr);
+            
+            ap_searchData={};
+            ap_searchData.pid=data.id;
+            ap_dt.fnDraw();
+            $(this).parents(".md-tab-content").removeClass("md-active").addClass("md-left").next().removeClass("md-right").addClass("md-active")
+        });
+    </script>
+{% endblock %}
+
